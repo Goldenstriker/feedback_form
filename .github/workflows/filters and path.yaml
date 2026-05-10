@@ -9,6 +9,8 @@ on:
       - reopened
     paths:
       - "app/index.html"
+env:
+  WORKFLOW_VAR: "Workflow"
 
 jobs:
   take-action:
@@ -16,4 +18,4 @@ jobs:
     steps:
       - run: |
           echo "=== $GITHUB_EVENT_NAME payload ==="
-          cat "$GITHUB_EVENT_PATH"
+          echo "=== $WORKFLOW_VAR payload ==="
