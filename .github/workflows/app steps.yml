@@ -1,0 +1,23 @@
+name: App Workflow with multiple steps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  say-hello-1:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "Test"
+
+  say-hello-2:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "Test 2"
+
+  say-hello-3:
+    runs-on: ubuntu-24.04
+    needs:
+      - say-hello-1
+      - say-hello-2
+    steps:
+      - run: echo "Test"
