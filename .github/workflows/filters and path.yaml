@@ -14,4 +14,6 @@ jobs:
   take-action:
     runs-on: ubuntu-24.04
     steps:
-      - run: echo "Test"
+      - run: |
+          echo "=== $GITHUB_EVENT_NAME payload ==="
+          cat "$GITHUB_EVENT_PATH"
