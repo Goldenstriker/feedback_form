@@ -20,4 +20,6 @@ jobs:
       - say-hello-1
       - say-hello-2
     steps:
-      - run: echo "Test"
+      - run: |
+          echo "Test"
+          echo "Test 2"
