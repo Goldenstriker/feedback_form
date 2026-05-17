@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Generate Conn Variable
         id: generate-variables
-        run: |
+        run:
           conn=bar
           echo "connection = ${conn}" >> "$GITHUB_OUTPUT"
           echo "Foo = ${conn}" >> "$GITHUB_ENV"
