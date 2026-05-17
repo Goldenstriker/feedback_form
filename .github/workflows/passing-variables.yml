@@ -12,10 +12,12 @@ jobs:
       - name: Generate Conn Variable
         id: generate-variables
         run: |
-          conn = bar
-          echo "connection = ${conn}" >> "$GITHUB_OUTPUT"
-          echo "Foo = ${conn}" >> "$GITHUB_ENV"
+          conn=bar
+          echo "conn=${conn}" >> "$GITHUB_OUTPUT"
+          echo "FOO=${conn}" >> "$GITHUB_ENV"
       - name: Inspect Variables
         run: |
-          echo "$Foo"
+          echo "$FOO"
           echo ${{steps.generate-variables.outputs.conn}}
+          echo "$GITHUB_ENV"
+          echo "$GITHUB_OUTPUT"
