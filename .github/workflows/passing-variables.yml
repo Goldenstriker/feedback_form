@@ -1,0 +1,21 @@
+name: Passing Variables
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  generate-variables:
+    runs-on: ubuntu-latest
+    outputs:
+      conn: ${{steps.generate-variables.outputs.conn}}
+    steps:
+      - name: Generate Conn Variable
+        id: generate-variables
+        run: |
+          conn=bar
+          echo "connection = ${conn}" >> "$GITHUB_OUTPUT"
+          echo "Foo = ${conn}" >> "$GITHUB_ENV"
+      - name: Inspect Variables
+        run: |
+          echo "$Foo"
+          echo ${{steps.generate-variables.outputs.conn}}
