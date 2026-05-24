@@ -3,8 +3,40 @@ on:
   workflow_dispatch:
     
 jobs:
-  generate-upload-artifacts:
+  restore-cache:
     runs-on: ubuntu-latest
+    steps:
+      - name: Restore cache
+        id: demo-cache
+        uses: actions/cache@v5
+        with:
+          path: example-artifacts
+          key: demo-cache-v1
+
+      - name: Populate cache directory
+        if: steps.demo-cache.outputs.cache-hit != 'true'
+        run: |
+          echo "Cache miss - generating contents"
+          mkdir -p example-artifacts
+          date > example-artifacts/artifact.txt
+
+      - name: Save cache
+        if: steps.demo-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v5
+        with:
+          path: example-artifacts
+          key: demo-cache-v1
+      
+      - name: Verify cache status
+        run: |
+          echo "cache-hit? -> %{{ steps.demo-cache.outputs.cache-hit }}"
+          cat example-artifacts/artifact.txt
+
+
+  generate-upload-artifacts:
+    needs: [restore-cache]
+    runs-on: ubuntu-latest
+    if: needs.restore-cache.outputs.cache-hit != 'true'
     steps:
       - name: Create artifacts
         run: | 
@@ -15,9 +47,10 @@ jobs:
         with:
           name: example-artifacts
           path: artifact.txt
+
   consumer:
     runs-on: ubuntu-latest
-    needs: [generate-upload-artifacts]
+    needs: [generate-upload-artifacts, restore-cache]
     steps:
       - name: Download Artifacts
         uses: actions/download-artifact@v7
