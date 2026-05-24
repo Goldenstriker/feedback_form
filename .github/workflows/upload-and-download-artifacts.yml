@@ -5,6 +5,8 @@ on:
 jobs:
   restore-cache:
     runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.demo-cache.outputs.cache-hit }}
     steps:
       - name: Restore cache
         id: demo-cache
@@ -50,11 +52,19 @@ jobs:
 
   consumer:
     runs-on: ubuntu-latest
+    if: always() && (needs.restore-cache.result == 'success')
     needs: [generate-upload-artifacts, restore-cache]
     steps:
       - name: Download Artifacts
+        if: needs.generate-upload-artifacts.result == 'success'
         uses: actions/download-artifact@v7
         with:
           name: example-artifacts
+
       - name: Print artifact content
+        if: needs.generate-upload-artifacts.result == 'success'
         run: cat artifact.txt
+
+      - name: Fallback if cache was hit
+        if: needs.generate-upload-artifacts.result == 'skipped'
+        run: echo "Skipped artifact download because we had a cache hit in the primary job!"
